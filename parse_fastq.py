@@ -1,10 +1,9 @@
-
 from Bio import SeqIO
 
-for record in SeqIO.parse("file.fastq", "fastq"):
-    print(record.id)
-    print(record.seq)
-    print(record.letter_annotation["phred_quality"])
+# for record in SeqIO.parse("1_control_18S_2019_minq7.fastq", "fastq"):
+#     print(record.id)
+#     print(record.seq)
+#     print(record.letter_annotations["phred_quality"])
 
 def calculate_gc_content(sequence):
 
@@ -34,9 +33,36 @@ def analyze_fastq(filepath):
     all_quality_scores = []
     sequence_lengths = []
 
-    pass
+    for record in SeqIO.parse("1_control_18S_2019_minq7.fastq", "fastq"):
+        total_sequences += 1
+        all_gc_values.append(calculate_gc_content(record.seq))
+        all_quality_scores.extend(record.letter_annotations["phred_quality"])
+        sequence_lengths.append(len(record.seq))
+
+    avg_gc = sum(all_gc_values)/len(all_gc_values) 
+    avg_quality = sum(all_quality_scores)/len(all_quality_scores)
+    avg_length = sum(sequence_lengths)/len(sequence_lengths)
+
+    
+    fastq_analysis = {
+        'total_sequences' : total_sequences,
+        'all_gc_values' : all_gc_values,
+        'all_quality_scores' : all_quality_scores,
+        'sequence_lengths' : sequence_lengths,
+        'avg_gc' : avg_gc,
+        'avg_quality' : avg_quality,
+        'avg_length' : avg_length
+    }
+
+    return fastq_analysis
+
+
 
 
 if __name__ == "__main__":
     results = analyze_fastq("sample.fastq")
-    print(results)
+    print(f"Total sequences: {results['total_sequences']}")
+    print(f"Avg GC%: {results['avg_gc']:.2%}")
+    print(f"Avg quality: {results['avg_quality']:.1f}")
+    print(f"Avg length: {results['avg_length']:.0f}")
+   
