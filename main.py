@@ -1,9 +1,11 @@
 
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from Bio import SeqIO
 import tempfile
 import os
 from parse_fastq import analyze_fastq
+
 
 app = FastAPI()
 
